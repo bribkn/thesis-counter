@@ -1,103 +1,89 @@
-import Image from "next/image";
+import React, { JSX } from "react";
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+interface Friend {
+    name: string;
+    startDate: Date;
+}
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+const friends: Friend[] = [
+    { name: "Waldo", startDate: new Date("2022-07-01") },
+    { name: "Barny", startDate: new Date("2021-07-01") },
+];
+
+const getDaysPassed = (startDate: Date): number => {
+    const today = new Date();
+    const diffTime = today.getTime() - startDate.getTime();
+    return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+};
+
+const formatNumber = (num: number): string => {
+    return Math.round(num).toLocaleString("es-ES");
+};
+
+interface Metrics {
+    hours: number;
+    lordOfTheRingsMovies: number;
+    lolMatches: number;
+    animeEpisodes: number;
+}
+
+const getMetrics = (days: number): Metrics => {
+    return {
+        hours: days * 24,
+        lordOfTheRingsMovies: (days * 24) / 11.5, // Películas de 11.5 horas (trilogía extendida)
+        lolMatches: (days * 24) / 40, // 40 minutos por partida
+        animeEpisodes: (days * 24) / 20, // 20 minutos por capítulo
+    };
+};
+
+export default function Home(): JSX.Element {
+    return (
+        <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-4">
+            <h1 className="text-4xl font-bold mb-6">¿Cuántos días llevan en la tesis?</h1>
+            <div className="flex space-x-6">
+                {friends.map((friend) => {
+                    const days = getDaysPassed(friend.startDate);
+                    const metrics = getMetrics(days);
+                    return (
+                        <div
+                            key={friend.name}
+                            className="bg-gray-800 p-6 rounded-lg shadow-lg w-80 text-center flex flex-col justify-between"
+                        >
+                            <h2 className="text-2xl font-semibold">{friend.name}</h2>
+                            <p className="text-5xl font-bold my-4">{formatNumber(days)} días</p>
+                            <p className="text-lg">({formatNumber(metrics.hours)} horas)</p>
+                            <div className="mt-4 text-sm text-gray-400">
+                                <p>Equivalen a: </p>
+                                <p>
+                                    🎥{" "}
+                                    {formatNumber(Number(metrics.lordOfTheRingsMovies.toFixed(1)))}{" "}
+                                    maratones de El Señor de los Anillos
+                                </p>
+                                <p>🎮 {formatNumber(metrics.lolMatches)} partidas de LoL</p>
+                                <p>📺 {formatNumber(metrics.animeEpisodes)} capítulos de anime</p>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+            <div className="mt-8 flex space-x-4">
+                <a
+                    href="https://www.youtube.com/watch?v=jxnsgrSL2TQ"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-red-900 hover:bg-red-800 text-white font-bold py-2 px-4 rounded"
+                >
+                    ¿Qué debo hacer?
+                </a>
+                <a
+                    href="https://www.youtube.com/watch?v=o6wtDPVkKqI"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-blue-900 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded"
+                >
+                    Ejemplo de tesis
+                </a>
+            </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    );
 }
