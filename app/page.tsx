@@ -31,16 +31,18 @@ const getMetrics = (days: number): Metrics => {
     return {
         hours: days * 24,
         lordOfTheRingsMovies: (days * 24) / 11.5, // Películas de 11.5 horas (trilogía extendida)
-        lolMatches: (days * 24) / 40, // 40 minutos por partida
-        animeEpisodes: (days * 24) / 20, // 20 minutos por capítulo
+        lolMatches: (days * 24 * 60) / 40, // 40 minutos por partida
+        animeEpisodes: (days * 24 * 60) / 20, // 20 minutos por capítulo
     };
 };
 
 export default function Home(): JSX.Element {
     return (
         <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-4">
-            <h1 className="text-4xl font-bold mb-6">¿Cuántos días llevan en la tesis?</h1>
-            <div className="flex space-x-6">
+            <h1 className="text-4xl font-bold mb-6 text-center">
+                ¿Cuántos días llevan en la tesis?
+            </h1>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {friends.map((friend) => {
                     const days = getDaysPassed(friend.startDate);
                     const metrics = getMetrics(days);
